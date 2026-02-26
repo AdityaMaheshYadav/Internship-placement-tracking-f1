@@ -54,23 +54,34 @@ function Login({ onLogin }) {
       return;
     }
 
+    if (selectedRole === 'admin' && (!newFullName || !newEmail || !newPassword)) {
+      alert("Please fill all required fields for admin registration!");
+      return;
+    }
+
     try {
       const payload = {
         name: newFullName,
         email: newEmail,
-        college: newCollege,
         role: selectedRole,
         password: newPassword,
       };
 
       // Add role-specific fields
       if (selectedRole === 'student') {
+        payload.college = newCollege;
         payload.pass_out_year = parseInt(newPassOutYear);
       }
       
       if (selectedRole === 'college') {
+        payload.college = newCollege;
         payload.department = newDepartment;
         payload.phone = newPhone;
+      }
+
+      if (selectedRole === 'admin') {
+        // Admin doesn't need college, department, etc.
+        payload.college = newCollege || null;
       }
 
       console.log("Register payload:", payload);
@@ -98,24 +109,25 @@ function Login({ onLogin }) {
   };
 
   return (
-    <div className="login-container">
-      <h2>Hack-2-Hire</h2>
+    <div className="login-page-wrapper">
+      <div className="login-container">
+        <h2>Hack-2-Hire</h2>
 
-      {/* Tabs */}
-      <div className="tab-buttons">
-        <button
-          className={!isCreatingAccount ? "active" : ""}
-          onClick={() => setIsCreatingAccount(false)}
-        >
-          Login
-        </button>
-        <button
-          className={isCreatingAccount ? "active" : ""}
-          onClick={() => setIsCreatingAccount(true)}
-        >
-          Create Account
-        </button>
-      </div>
+        {/* Tabs */}
+        <div className="tab-buttons">
+          <button
+            className={!isCreatingAccount ? "active" : ""}
+            onClick={() => setIsCreatingAccount(false)}
+          >
+            Login
+          </button>
+          <button
+            className={isCreatingAccount ? "active" : ""}
+            onClick={() => setIsCreatingAccount(true)}
+          >
+            Create Account
+          </button>
+        </div>
 
       {/* Role Selection */}
       <div className="role-selection">
@@ -139,8 +151,6 @@ function Login({ onLogin }) {
             type="button"
             className={selectedRole === "admin" ? "role-btn active" : "role-btn"}
             onClick={() => setSelectedRole("admin")}
-            disabled={isCreatingAccount}
-            title={isCreatingAccount ? "Admin registration not allowed" : ""}
           >
             Admin
           </button>
@@ -182,13 +192,27 @@ function Login({ onLogin }) {
             onChange={(e) => setNewEmail(e.target.value)}
             required
           />
-          <input
-            type="text"
-            placeholder={selectedRole === 'college' ? "College/Institution Name" : "College Name"}
-            value={newCollege}
-            onChange={(e) => setNewCollege(e.target.value)}
-            required
-          />
+          
+          {/* Show college field for student and college roles only */}
+          {(selectedRole === 'student' || selectedRole === 'college') && (
+            <input
+              type="text"
+              placeholder={selectedRole === 'college' ? "College/Institution Name" : "College Name"}
+              value={newCollege}
+              onChange={(e) => setNewCollege(e.target.value)}
+              required
+            />
+          )}
+
+          {/* Admin can optionally add college/organization */}
+          {selectedRole === 'admin' && (
+            <input
+              type="text"
+              placeholder="Organization (Optional)"
+              value={newCollege}
+              onChange={(e) => setNewCollege(e.target.value)}
+            />
+          )}
           
           {/* Student-specific fields */}
           {selectedRole === 'student' && (
@@ -232,6 +256,7 @@ function Login({ onLogin }) {
           </button>
         </form>
       )}
+    </div>
     </div>
   );
 }

@@ -1,32 +1,79 @@
+/* Login Page Background */
+.login-page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-page-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('https://source.unsplash.com/1920x1080/?university,campus,education,students');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(10px) brightness(0.7);
+  transform: scale(1.1);
+  z-index: 0;
+}
+
+.login-page-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.3) 0%, rgba(118, 75, 162, 0.3) 100%);
+  z-index: 0;
+}
+
 .login-container {
   width: 400px;
-  margin: 80px auto;
-  padding: 25px;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  background: #fff;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
 h2 {
   margin-bottom: 20px;
   color: #007bff;
+  font-size: 28px;
+  font-weight: 700;
 }
 
 .tab-buttons {
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .tab-buttons button {
   flex: 1;
-  padding: 10px;
+  padding: 12px;
   border: none;
   cursor: pointer;
   background: #f0f0f0;
   font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.tab-buttons button:hover {
+  background: #e0e0e0;
 }
 
 .tab-buttons .active {
@@ -66,12 +113,15 @@ h2 {
 .role-btn:hover:not(:disabled) {
   border-color: #007bff;
   background: #f0f8ff;
+  transform: translateY(-2px);
 }
 
 .role-btn.active {
   background: #007bff;
   color: white;
   border-color: #007bff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
 }
 
 .role-btn:disabled {
@@ -89,25 +139,41 @@ h2 {
 
 .login-form input,
 .create-account-form input {
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
   font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.login-form input:focus,
+.create-account-form input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
 
 .login-form button,
 .create-account-form button {
-  padding: 12px;
+  padding: 14px;
   border: none;
-  border-radius: 6px;
-  background: #007bff;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
   color: white;
   font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
 }
 
 .login-form button:hover,
 .create-account-form button:hover {
-  background: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+}
+
+.login-form button:active,
+.create-account-form button:active {
+  transform: translateY(0);
 }
