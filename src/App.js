@@ -25,7 +25,7 @@ function App() {
     <Router>
       <div className="App">
         <header className="header">
-          <h1>Alumni Connect</h1>
+          <h1>Hack-2-Hire</h1>
           {isLoggedIn && (
            <div className="header-right">
             {/* Inbox */}
@@ -127,7 +127,7 @@ function App() {
                               className="post-profile-pic"
                             />
                             <div>
-                              <h4>Alumni Connect</h4>
+                              <h4>Hack-2-Hire</h4>
                               <p>Just now</p>
                             </div>
                           </div>

@@ -5,9 +5,9 @@ import "./About.css";
 const About = () => {
   return (
     <div className="about-container">
-      <h2 className="about-heading">About Alumni Connect</h2>
+      <h2 className="about-heading">About Hack-2-Hire</h2>
       <p className="about-description">
-        Alumni Connect is a vibrant community that bridges the gap between
+        Hack-2-Hire is a vibrant community that bridges the gap between
         students and alumni. Our platform helps you network, explore career
         opportunities, share experiences, and stay updated with alumni events.
       </p>

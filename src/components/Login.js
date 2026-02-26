@@ -4,6 +4,7 @@ import "./Login.css";
 
 function Login({ onLogin }) {
   const [isCreatingAccount, setIsCreatingAccount] = useState(false);
+  const [selectedRole, setSelectedRole] = useState("student");
 
   // Login states
   const [loginEmail, setLoginEmail] = useState("");
@@ -14,6 +15,8 @@ function Login({ onLogin }) {
   const [newEmail, setNewEmail] = useState("");
   const [newCollege, setNewCollege] = useState("");
   const [newPassOutYear, setNewPassOutYear] = useState("");
+  const [newDepartment, setNewDepartment] = useState("");
+  const [newPhone, setNewPhone] = useState("");
   const [newPassword, setNewPassword] = useState("");
 
   // Login submit
@@ -23,9 +26,10 @@ function Login({ onLogin }) {
       const response = await api.post("/auth/login", {
         email: loginEmail,
         password: loginPassword,
+        role: selectedRole,
       });
 
-      alert("✅ Login successful!");
+      alert(`✅ Login successful as ${selectedRole}!`);
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.user));
       onLogin();
@@ -39,8 +43,14 @@ function Login({ onLogin }) {
   const handleCreateAccountSubmit = async (e) => {
     e.preventDefault();
 
-    if (!newFullName || !newEmail || !newCollege || !newPassOutYear || !newPassword) {
-      alert("Please fill all required fields!");
+    // Role-specific validation
+    if (selectedRole === 'student' && (!newFullName || !newEmail || !newCollege || !newPassOutYear || !newPassword)) {
+      alert("Please fill all required fields for student registration!");
+      return;
+    }
+
+    if (selectedRole === 'college' && (!newFullName || !newEmail || !newCollege || !newDepartment || !newPassword)) {
+      alert("Please fill all required fields for college registration!");
       return;
     }
 
@@ -49,16 +59,35 @@ function Login({ onLogin }) {
         name: newFullName,
         email: newEmail,
         college: newCollege,
-        pass_out_year: parseInt(newPassOutYear), // matches DB
+        role: selectedRole,
         password: newPassword,
       };
+
+      // Add role-specific fields
+      if (selectedRole === 'student') {
+        payload.pass_out_year = parseInt(newPassOutYear);
+      }
+      
+      if (selectedRole === 'college') {
+        payload.department = newDepartment;
+        payload.phone = newPhone;
+      }
 
       console.log("Register payload:", payload);
 
       const response = await api.post("/auth/register", payload);
 
-      alert("✅ Account Created Successfully!");
+      alert(`✅ ${selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)} Account Created Successfully!`);
       setIsCreatingAccount(false);
+      
+      // Reset form
+      setNewFullName("");
+      setNewEmail("");
+      setNewCollege("");
+      setNewPassOutYear("");
+      setNewDepartment("");
+      setNewPhone("");
+      setNewPassword("");
     } catch (err) {
       console.error("Registration error:", err.response?.data || err.message);
       alert(
@@ -70,7 +99,7 @@ function Login({ onLogin }) {
 
   return (
     <div className="login-container">
-      <h2>Alumni Connect</h2>
+      <h2>Hack-2-Hire</h2>
 
       {/* Tabs */}
       <div className="tab-buttons">
@@ -86,6 +115,36 @@ function Login({ onLogin }) {
         >
           Create Account
         </button>
+      </div>
+
+      {/* Role Selection */}
+      <div className="role-selection">
+        <label>Select Role:</label>
+        <div className="role-buttons">
+          <button
+            type="button"
+            className={selectedRole === "student" ? "role-btn active" : "role-btn"}
+            onClick={() => setSelectedRole("student")}
+          >
+            Student
+          </button>
+          <button
+            type="button"
+            className={selectedRole === "college" ? "role-btn active" : "role-btn"}
+            onClick={() => setSelectedRole("college")}
+          >
+            College
+          </button>
+          <button
+            type="button"
+            className={selectedRole === "admin" ? "role-btn active" : "role-btn"}
+            onClick={() => setSelectedRole("admin")}
+            disabled={isCreatingAccount}
+            title={isCreatingAccount ? "Admin registration not allowed" : ""}
+          >
+            Admin
+          </button>
+        </div>
       </div>
 
       {/* Forms */}
@@ -105,7 +164,7 @@ function Login({ onLogin }) {
             onChange={(e) => setLoginPassword(e.target.value)}
             required
           />
-          <button type="submit">Login</button>
+          <button type="submit">Login as {selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)}</button>
         </form>
       ) : (
         <form className="create-account-form" onSubmit={handleCreateAccountSubmit}>
@@ -125,18 +184,42 @@ function Login({ onLogin }) {
           />
           <input
             type="text"
-            placeholder="College Name"
+            placeholder={selectedRole === 'college' ? "College/Institution Name" : "College Name"}
             value={newCollege}
             onChange={(e) => setNewCollege(e.target.value)}
             required
           />
-          <input
-            type="number"
-            placeholder="Pass Out Year"
-            value={newPassOutYear}
-            onChange={(e) => setNewPassOutYear(e.target.value)}
-            required
-          />
+          
+          {/* Student-specific fields */}
+          {selectedRole === 'student' && (
+            <input
+              type="number"
+              placeholder="Pass Out Year"
+              value={newPassOutYear}
+              onChange={(e) => setNewPassOutYear(e.target.value)}
+              required
+            />
+          )}
+
+          {/* College-specific fields */}
+          {selectedRole === 'college' && (
+            <>
+              <input
+                type="text"
+                placeholder="Department"
+                value={newDepartment}
+                onChange={(e) => setNewDepartment(e.target.value)}
+                required
+              />
+              <input
+                type="tel"
+                placeholder="Phone Number (Optional)"
+                value={newPhone}
+                onChange={(e) => setNewPhone(e.target.value)}
+              />
+            </>
+          )}
+
           <input
             type="password"
             placeholder="Password"
@@ -144,7 +227,9 @@ function Login({ onLogin }) {
             onChange={(e) => setNewPassword(e.target.value)}
             required
           />
-          <button type="submit">Create Account</button>
+          <button type="submit">
+            Register as {selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)}
+          </button>
         </form>
       )}
     </div>
