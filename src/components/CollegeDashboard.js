@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route, Link } from "react-router-dom";
-import { FaUser, FaFileAlt, FaCalendar, FaUsers, FaBuilding, FaHome, FaChartLine, FaTruck, FaCertificate, FaBriefcase } from "react-icons/fa";
+import { FaUser, FaFileAlt, FaCalendar, FaUsers, FaBuilding, FaHome, FaChartLine, FaBriefcase, FaChartBar } from "react-icons/fa";
 
 import Profile from "./Profile";
 import CAFForm from "./CAFForm";
@@ -11,6 +11,9 @@ import Documents from "./Documents";
 import CommunityNew from "./CommunityNew";
 import CollegeHome from "./CollegeHome";
 import PlacementTracking from "./PlacementTracking";
+import CompanyDrives from "./CompanyDrives";
+import InternshipTracking from "./InternshipTracking";
+import PlacementAnalytics from "./PlacementAnalytics";
 
 function CollegeDashboard() {
   return (
@@ -25,6 +28,15 @@ function CollegeDashboard() {
         </Link>
         <Link to="/college-dashboard/placement-tracking" className="menu-item">
           <FaChartLine /> <span>Placement Tracking</span>
+        </Link>
+        <Link to="/college-dashboard/analytics" className="menu-item">
+          <FaChartBar /> <span>Analytics & Charts</span>
+        </Link>
+        <Link to="/college-dashboard/company-drives" className="menu-item">
+          <FaBuilding /> <span>Company Drives</span>
+        </Link>
+        <Link to="/college-dashboard/internships" className="menu-item">
+          <FaBriefcase /> <span>Internship Tracking</span>
         </Link>
         <Link to="/college-dashboard/community" className="menu-item">
           <FaUsers /> <span>Community</span>
@@ -52,6 +64,9 @@ function CollegeDashboard() {
           <Route path="/" element={<CollegeHome />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/placement-tracking" element={<PlacementTracking />} />
+          <Route path="/analytics" element={<PlacementAnalytics />} />
+          <Route path="/company-drives" element={<CompanyDrives />} />
+          <Route path="/internships" element={<InternshipTracking />} />
           <Route path="/community" element={<CommunityNew />} />
           <Route path="/caf-form" element={<CAFForm />} />
           <Route path="/students" element={<StudentInfo />} />
